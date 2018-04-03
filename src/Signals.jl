@@ -1,5 +1,6 @@
 module Signals
 
-# package code goes here
+include("DSP.jl")
+include("Wavelets.jl")
 
 end # module

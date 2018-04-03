@@ -1,9 +1,9 @@
 __precompile__()
 
-module SeismicSignals
+module DSP
 
-import JuMIT.Grid
-import JuMIT.Interpolation
+using Grid
+using Interpolation
 using Distributions
 using DistributedArrays
 using DSP # from julia
