@@ -3,7 +3,7 @@ __precompile__()
 module Wavelets
 
 using Grid
-import JuMIT.Signals.DSP
+import Signals.DSP
 
 """
 Generate a Ricker Wavelet. Reference:
