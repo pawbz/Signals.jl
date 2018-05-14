@@ -25,7 +25,7 @@ function P_filt(nt::Int=128, filt_func=x->butterworth(x, order=2, fmin=0.0, fmax
 
 end
 
-function filt!(xx, x, pa::P_filt)
+function filter!(xx, x, pa::P_filt)
 
 	for ii in 1:size(xx,2)
 		xv=view(x, :, ii)

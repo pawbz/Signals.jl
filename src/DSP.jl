@@ -137,7 +137,7 @@ function get_tapered_random_tmax_signal(tgrid::Grid.M1D;
 		X[findn(Xs.==0.0)]=0.0
 	end
 	# band limit
-	(filt_flag) && (filt!(X, digitalfilter(filtsource, designmethod), X))
+	(filt_flag) && (Base.filt!(X, digitalfilter(filtsource, designmethod), X))
 	
 	(length(X) ≠ 1) && normalize!(X)
 	wavsrc[its] = X
