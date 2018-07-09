@@ -4,6 +4,7 @@ module Wavelets
 
 using Grid
 import Signals.DSP
+using Distributions
 
 """
 Generate a Ricker Wavelet. Reference:
@@ -15,6 +16,7 @@ Bandwidth = 1.2 * fpeak for ricker
 * `fqdom::Float64`: dominant frequency 
 * `tgrid::Grid.M1D`: time-domain grid
 * `tpeak::Float64=tgrid.x[1]+1.5/fqdom`: the peak of the ricker in time (has a default)
+* `tpeak_rand_flag` : randomly place peak of ricker
 """
 function ricker(fqdom::Float64,
 		tgrid::Grid.M1D;
@@ -22,10 +24,19 @@ function ricker(fqdom::Float64,
 		attrib::AbstractString="",
 		trim_tol::Float64=0.0,
 		maxamp::Float64=1.0,
+		tpeak_rand_flag=false,
+		maxamp_rand_flag=false,
+		phase_rand_flag=false,
 		)
 	(tpeak < tgrid.x[1]+1.5/fqdom) && error("cannot output Ricker for given tgrid and tpeak")
 	(tpeak > tgrid.x[end]-1.5/fqdom) && error("cannot output Ricker for given tgrid and tpeak")
 
+	if(tpeak_rand_flag)
+		tpeak=rand(Uniform(tgrid.x[1]+1.5/fqdom,tgrid.x[end]-1.5/fqdom))
+	end
+	if(maxamp_rand_flag)
+		maxamp=rand(Uniform(-1,1))
+	end
 	isapprox(fqdom,0.0) && error("dominant frequency cannot be zero")
 
 	#! some constants
@@ -55,6 +66,11 @@ function ricker(fqdom::Float64,
 
 	isapprox(maximum(abs.(wav)),0.0) && warn("wavelet is zeros")
 
+	# apply random phase to the ricker wavelet
+	if(phase_rand_flag)
+		wav=apply_rand_phase(wav)
+	end
+
 	if(trim_tol != 0.0)
 		return wav[abs(wav).>=trim_tol]
 	else
@@ -77,41 +93,71 @@ function  ormsby(
 		f4::Float64=fqdom+fracbandwidth*0.5*fqdom,
 		f2::Float64=0.25*f4+0.75*f1,
 		f3::Float64=0.25*f1+0.75*f4,
-		tpeak::Float64=tgrid.x[1]+1.5/(0.5*(f1+f4)), # using approximate half width 
+		tpeak::Float64=tgrid.x[1]+1.5/(0.25*(f1+f4)), # using approximate half width 
 		trim_tol::Float64=0.0,
-		tperc::Float64=0.0
+		tperc::Float64=0.0,
+		tpeak_rand_flag=false,
+		maxamp_rand_flag=false,
+		phase_rand_flag=false,
 		)
 
-# some constants
-A43 = (pi*f4)^2 / (pi*f4 - pi*f3);
-A34 = (pi*f3)^2 / (pi*f4 - pi*f3);
-A21 = (pi*f2)^2 / (pi*f2 - pi*f1);
-A12 = (pi*f1)^2 / (pi*f2 - pi*f1);
+	# some constants
+	A43 = (pi*f4)^2 / (pi*f4 - pi*f3);
+	A34 = (pi*f3)^2 / (pi*f4 - pi*f3);
+	A21 = (pi*f2)^2 / (pi*f2 - pi*f1);
+	A12 = (pi*f1)^2 / (pi*f2 - pi*f1);
 
-wav = zeros(tgrid.nx);
-# ormsby wavelet
-for it = 1: tgrid.nx
-	t = tgrid.x[it]-tpeak
-        S4 = (sinc(pi*f4*t))^2
-        S3 = (sinc(pi*f3*t))^2
-        S2 = (sinc(pi*f2*t))^2
-        S1 = (sinc(pi*f1*t))^2
+	wav = zeros(tgrid.nx);
 
-	wav[it] =  (A43 * S4 - A34 * S3) - (A21 * S2 - A12 * S1)
+	if(tpeak_rand_flag)
+		tpeak=rand(Uniform(tgrid.x[1]+1.5/(0.25*(f1+f4)),tgrid.x[end]-1.5/(0.25*(f1+f4))))
+	end
+
+	# ormsby wavelet
+	for it = 1: tgrid.nx
+		t = tgrid.x[it]-tpeak
+		S4 = (sinc(pi*f4*t))^2
+		S3 = (sinc(pi*f3*t))^2
+		S2 = (sinc(pi*f2*t))^2
+		S1 = (sinc(pi*f1*t))^2
+
+		wav[it] =  ((A43 * S4 - A34 * S3) - (A21 * S2 - A12 * S1))
+	end
+
+	isapprox(maximum(abs.(wav)),0.0) && warn("wavelet is zeros")
+
+	# normalize
+	wav /= maximum(abs.(wav));
+
+	if(maxamp_rand_flag)
+		wav *= rand(Uniform(-1,1))
+	end
+
+
+
+	# apply random phase to the ricker wavelet
+	if(phase_rand_flag)
+		wav=apply_rand_phase(wav)
+	end
+
+	if(trim_tol != 0.0)
+		wav = wav[abs(wav).>=trim_tol]
+	end
+
+	wav = wav .* DSP.taper(ones(wav),tperc)
+	return wav
+
 end
 
-isapprox(maximum(abs.(wav)),0.0) && warn("wavelet is zeros")
 
-# normalize
-wav /= maximum(abs.(wav));
-
-if(trim_tol != 0.0)
-	wav = wav[abs(wav).>=trim_tol]
-end
-
-wav = wav .* DSP.taper(ones(wav),tperc)
-return wav
-
+function apply_rand_phase(wav)
+	nt=length(wav)
+	W=rfft(wav);
+	θ=rand(Uniform(-Float64(pi),Float64(pi)))
+	for i in eachindex(W)
+		W[i]=W[i]*complex(cos(θ),sin(θ))
+	end
+	wav=irfft(W,nt)
 end
 
 end # module

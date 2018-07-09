@@ -257,12 +257,14 @@ function findfreq{ND}(
 	end
 
 	if(attrib == :max)
-		return maximum(fgrid.x[findlast(ax .>= threshold)])
+		iii=findlast(ax .>= threshold)
 	elseif(attrib == :min)
-		return minimum(fgrid.x[findfirst(ax .>= threshold)])
+		iii=findfirst(ax .>= threshold)
 	elseif(attrib == :peak)
-		return fgrid.x[indmax(ax)]
+		iii=indmax(ax)
 	end
+	ii=ind2sub(size(ax),iii)[1]
+	return fgrid.x[ii]
 
 end
 
