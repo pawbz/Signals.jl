@@ -1,5 +1,3 @@
-__precompile__()
-
 module DSP
 
 using Grid
@@ -8,6 +6,7 @@ using Conv
 using Distributions
 using DistributedArrays
 using DSP # from julia
+using FFTW
 
 
 
@@ -24,7 +23,7 @@ function chirp!(x; tgrid=nothing,
 
 	for it in 1:tgrid.nx
 		t=(it-1)*tgrid.δx
-		x[it] = sin(2.*π*(freqmin*t+k/2.0*t*t))
+		x[it] = sin(2. * π *(freqmin*t+k/2.0*t*t))
 	end
 
 end
@@ -206,7 +205,7 @@ Construct Toy Green's functions
 Decaying peaks, control number of events, and their positions, depending on bfrac and efrac.
 * `afrac` : control amplitude of peaks
 """
-function toy_green!(x;nevents=1,afrac=[1./2.^(ie-1) for ie in 1:nevents],bfrac=0.0,efrac=0.0)
+function toy_green!(x;nevents=1,afrac=[inv(2^(ie-1)) for ie in 1:nevents],bfrac=0.0,efrac=0.0)
 	nt=size(x,1)
 	nr=size(x,2)
 	x[:]=0.0
@@ -237,12 +236,12 @@ function toy_green!(x;nevents=1,afrac=[1./2.^(ie-1) for ie in 1:nevents],bfrac=0
 end
 
 
-function findfreq{ND}(
+function findfreq(
 		  x::Array{Float64, ND},
 		  tgrid::Grid.M1D;
 		  attrib::Symbol=:peak,
 		  threshold::Float64=-50.
-		  )
+		  ) where {ND}
 
 	cx=rfft(x,[1]);
 	fgrid=Grid.M1D_rfft(tgrid);
@@ -261,7 +260,7 @@ function findfreq{ND}(
 	elseif(attrib == :min)
 		iii=findfirst(ax .>= threshold)
 	elseif(attrib == :peak)
-		iii=indmax(ax)
+		iii=argmax(ax)
 	end
 	ii=ind2sub(size(ax),iii)[1]
 	return fgrid.x[ii]
@@ -282,20 +281,19 @@ function taper(x::AbstractArray,perc::Float64)
 	return xout
 end
 
-function taper!{N}(x::AbstractArray{Float64,N}, perc::Float64=0.0; bperc=perc,eperc=perc)
+function taper!(x, perc=0.0; bperc=perc,eperc=perc)
 
 	nt=size(x,1)
-	nttb=min(round(Int,nt*bperc/100.), nt)
-	ntte=min(round(Int,nt*eperc/100.), nt)
-	dd=size(x)[2:N]
-	for i in CartesianRange(dd)
-		kb=inv(2.*round(Int,nt*bperc/100.)-1)*pi
-		for it in 1:nttb
-			x[it,i] *= sin((it-1)*kb)
+	nttb=min(round(Int,nt*bperc*0.01), nt)
+	ntte=min(round(Int,nt*eperc*0.01), nt)
+	kb=inv(2.0*round(Int,nt*bperc*0.01)-1)*pi
+	ke=inv(2.0*round(Int,nt*eperc*0.01)-1)*pi
+	for i in CartesianIndices(size(x))
+		if(1≤i[1]≤nttb)
+			x[i] *= sin((i[1]-1)*kb)
 		end
-		ke=inv(2.*round(Int,nt*eperc/100.)-1)*pi
-		for it in nt-ntte+1:nt 
-			x[it,i] *= sin((-it+nt)*ke)
+		if(nt-ntte+1≤i[1]≤nt)
+			x[i] *= sin((-i[1]+nt)*ke)
 		end
 	end
 end

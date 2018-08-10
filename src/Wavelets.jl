@@ -1,8 +1,7 @@
-__precompile__()
-
 module Wavelets
 
 using Grid
+using FFTW
 import Signals.DSP
 using Distributions
 
@@ -45,11 +44,11 @@ function ricker(fqdom::Float64,
 	δt = tgrid.δx
 
 	# a vector is odd number of samples (nt + 1 corresponds to time zero)
-	wav = zeros(tgrid.x);
+	wav = zero(tgrid.x);
 	# k = (1 - 2* pf * t^2) * Exp[-pf *t^2]
 	# Simplify[D[k,t]]
 	# FortranForm[Simplify[D[k,t]]]
-	if(contains(attrib,"[DIFF]"))
+	if(occursin("[DIFF]",attrib))
 			# ricker after a time derivative
 			for it = 1:nt
 				tsquare = (tgrid.x[it]-tpeak) * (tgrid.x[it]-tpeak)
@@ -152,12 +151,12 @@ end
 
 function apply_rand_phase(wav)
 	nt=length(wav)
-	W=rfft(wav);
+	W=FFTW.rfft(wav);
 	θ=rand(Uniform(-Float64(pi),Float64(pi)))
 	for i in eachindex(W)
 		W[i]=W[i]*complex(cos(θ),sin(θ))
 	end
-	wav=irfft(W,nt)
+	wav=FFTW.irfft(W,nt)
 end
 
 end # module
