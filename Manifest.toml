@@ -57,7 +57,7 @@ version = "1.0.1"
 
 [[Conv]]
 deps = ["BenchmarkTools", "Calculus", "DSP", "FFTW", "LinearAlgebra", "Misfits", "Test"]
-git-tree-sha1 = "034fc28cec13c3025c1817574eb36528fc8e2b20"
+git-tree-sha1 = "9c9c58e8906fb031b7759f0e60ef273f62c4b36e"
 repo-rev = "master"
 repo-url = "https://github.com/pawbz/Conv.jl.git"
 uuid = "eca63721-1f9a-5e79-b7ed-eda27904149e"
@@ -130,7 +130,7 @@ uuid = "f6369f11-7733-5829-9624-2563aa707210"
 version = "0.8.5"
 
 [[Grid]]
-git-tree-sha1 = "0eba45720d17594ed8a9b5910f54fd89d3ddb508"
+git-tree-sha1 = "3bf610eabc038400f8227883bea2589cc6908234"
 repo-rev = "master"
 repo-url = "https://github.com/pawbz/Grid.jl.git"
 uuid = "03512f2c-8e8a-5728-b518-32bdd82c6646"
@@ -142,7 +142,7 @@ uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [[Interpolation]]
 deps = ["BenchmarkTools", "LinearAlgebra", "LinearMaps", "SparseArrays", "Test"]
-git-tree-sha1 = "358a838aea1946dfec7eaec94d65d5906684e4d8"
+git-tree-sha1 = "566e85958a4b2d25c8812911384ba49550c5eb50"
 repo-rev = "master"
 repo-url = "https://github.com/pawbz/Interpolation.jl.git"
 uuid = "475ca4d2-b0ae-5dbf-b83e-9b10c0db9a39"
@@ -179,7 +179,7 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 
 [[Misfits]]
 deps = ["BenchmarkTools", "Calculus", "Distances", "ForwardDiff", "LinearAlgebra", "StatsBase", "Test"]
-git-tree-sha1 = "cf0c26d8d4140d8d8a4e8842bfeab2d34cb042b8"
+git-tree-sha1 = "e1a4e1cee109e2bfa185b44642c2673d53873ae2"
 repo-rev = "master"
 repo-url = "https://github.com/pawbz/Misfits.jl.git"
 uuid = "b5bed6b1-4eab-585a-ab29-0604291a8c0e"
