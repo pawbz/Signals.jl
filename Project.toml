@@ -1,0 +1,14 @@
+name = "Signals"
+uuid = "6303bc30-01ab-52eb-8b10-60e47555a8d1"
+version = "0.0.0"
+
+[deps]
+Conv = "eca63721-1f9a-5e79-b7ed-eda27904149e"
+DSP = "717857b8-e6f2-59f4-9121-6e50c889abd2"
+DistributedArrays = "aaf54ef3-cdf8-58ed-94cc-d582ad619b94"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
+Grid = "03512f2c-8e8a-5728-b518-32bdd82c6646"
+Interpolation = "475ca4d2-b0ae-5dbf-b83e-9b10c0db9a39"
+Misfits = "b5bed6b1-4eab-585a-ab29-0604291a8c0e"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
