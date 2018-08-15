@@ -14,10 +14,10 @@ version = "0.2.2"
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
 [[BenchmarkTools]]
-deps = ["Compat", "JSON", "Statistics"]
-git-tree-sha1 = "38c5dc94e4d07c3b39fe4b9d8c72d9ddfc89bb91"
+deps = ["JSON", "Pkg", "Printf", "Statistics", "Test"]
+git-tree-sha1 = "623941d5eb10e440eb12c97183f96f2f0191d0ca"
 uuid = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
-version = "0.3.2"
+version = "0.4.0"
 
 [[BinDeps]]
 deps = ["Compat", "Libdl", "SHA", "URIParser"]
@@ -27,9 +27,9 @@ version = "0.8.9"
 
 [[BinaryProvider]]
 deps = ["Libdl", "Pkg", "SHA", "Test"]
-git-tree-sha1 = "2883bc1b389e3d57a134796c39c788db3f298cef"
+git-tree-sha1 = "ffbf89cc49b073cffdb91381b7ee60557a03ec96"
 uuid = "b99e7846-7c00-51b0-8f62-c81ae34c0232"
-version = "0.4.0"
+version = "0.4.1"
 
 [[Calculus]]
 deps = ["Compat"]
@@ -51,23 +51,23 @@ version = "1.0.1"
 
 [[Conda]]
 deps = ["Compat", "JSON", "VersionParsing"]
-git-tree-sha1 = "b76a441539d66a18ba34df28d34dc5b9202164a3"
+git-tree-sha1 = "a47f9a2c7b80095e6a935536795635522fe27f5d"
 uuid = "8f4d0f93-b110-5947-807f-2305c1781a2d"
-version = "1.0.0"
+version = "1.0.1"
 
 [[Conv]]
-deps = ["BenchmarkTools", "Calculus", "DSP", "FFTW", "LinearAlgebra", "Misfits"]
-git-tree-sha1 = "9e5dd9e6dc8499c62d40ff54524b73bd58d41bc7"
+deps = ["BenchmarkTools", "Calculus", "DSP", "FFTW", "LinearAlgebra", "Misfits", "Test"]
+git-tree-sha1 = "034fc28cec13c3025c1817574eb36528fc8e2b20"
 repo-rev = "master"
-repo-url = "Conv"
+repo-url = "https://github.com/pawbz/Conv.jl.git"
 uuid = "eca63721-1f9a-5e79-b7ed-eda27904149e"
-version = "1.0.0"
+version = "0.0.0"
 
 [[DSP]]
-deps = ["AbstractFFTs", "Compat", "FFTW", "LinearAlgebra", "Polynomials", "Reexport", "SpecialFunctions"]
-git-tree-sha1 = "c0f6a5033c7729a3428e0ef6843eb34263c437ca"
+deps = ["AbstractFFTs", "Compat", "FFTW", "LinearAlgebra", "Pkg", "Polynomials", "Random", "Reexport", "SpecialFunctions"]
+git-tree-sha1 = "c90967ff4c5e99f652b278624634dcef73b58848"
 uuid = "717857b8-e6f2-59f4-9121-6e50c889abd2"
-version = "0.5.0"
+version = "0.5.1"
 
 [[DataStructures]]
 deps = ["InteractiveUtils", "REPL", "Random", "Serialization", "Test"]
@@ -107,9 +107,9 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[DistributedArrays]]
 deps = ["Distributed", "LinearAlgebra", "Primes", "Random", "Serialization", "SparseArrays", "Statistics", "Test"]
-git-tree-sha1 = "c0aedf976e6aa92e3399abeb3864f6be11e2a7a7"
+git-tree-sha1 = "7b76e40191020de42da2b5753291ec463782411b"
 uuid = "aaf54ef3-cdf8-58ed-94cc-d582ad619b94"
-version = "0.5.0"
+version = "0.5.1"
 
 [[Distributions]]
 deps = ["Distributed", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns", "Test"]
@@ -118,33 +118,33 @@ uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
 version = "0.16.2"
 
 [[FFTW]]
-deps = ["AbstractFFTs", "BinaryProvider", "Compat", "Conda", "Libdl", "LinearAlgebra", "Reexport", "Test"]
-git-tree-sha1 = "60346335ad3aa60bfbdc358c6d1468bffbcff071"
+deps = ["AbstractFFTs", "BinaryProvider", "Compat", "Conda", "Libdl", "LinearAlgebra", "Pkg", "Reexport", "Test"]
+git-tree-sha1 = "29cda58afbf62f35b1a094882ad6c745a47b2eaa"
 uuid = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
-version = "0.2.3"
+version = "0.2.4"
 
 [[ForwardDiff]]
 deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "InteractiveUtils", "LinearAlgebra", "NaNMath", "Pkg", "Random", "SparseArrays", "SpecialFunctions", "StaticArrays", "Test"]
-git-tree-sha1 = "34abc9c9650a3a661b7c2cbc685825d5e58bf074"
+git-tree-sha1 = "0dd11038da4efce9ce457b1cf47a52eaf6251bd3"
 uuid = "f6369f11-7733-5829-9624-2563aa707210"
-version = "0.8.4"
+version = "0.8.5"
 
 [[Grid]]
-git-tree-sha1 = "0879ef78e09c83b39169d5b9e939735703859b30"
+git-tree-sha1 = "0eba45720d17594ed8a9b5910f54fd89d3ddb508"
 repo-rev = "master"
-repo-url = "Grid"
+repo-url = "https://github.com/pawbz/Grid.jl.git"
 uuid = "03512f2c-8e8a-5728-b518-32bdd82c6646"
-version = "0.4.2+"
+version = "0.0.0"
 
 [[InteractiveUtils]]
 deps = ["LinearAlgebra", "Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [[Interpolation]]
-deps = ["BenchmarkTools", "LinearAlgebra", "LinearMaps", "SparseArrays"]
-git-tree-sha1 = "392eb39cf55c04e8aa2dfe1478bafb6bbd37bb61"
+deps = ["BenchmarkTools", "LinearAlgebra", "LinearMaps", "SparseArrays", "Test"]
+git-tree-sha1 = "358a838aea1946dfec7eaec94d65d5906684e4d8"
 repo-rev = "master"
-repo-url = "Interpolation"
+repo-url = "https://github.com/pawbz/Interpolation.jl.git"
 uuid = "475ca4d2-b0ae-5dbf-b83e-9b10c0db9a39"
 version = "0.0.0"
 
@@ -179,11 +179,11 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 
 [[Misfits]]
 deps = ["BenchmarkTools", "Calculus", "Distances", "ForwardDiff", "LinearAlgebra", "StatsBase", "Test"]
-git-tree-sha1 = "958a97c2b8158724a85cc3844183510e0a95d973"
+git-tree-sha1 = "cf0c26d8d4140d8d8a4e8842bfeab2d34cb042b8"
 repo-rev = "master"
-repo-url = "Misfits"
+repo-url = "https://github.com/pawbz/Misfits.jl.git"
 uuid = "b5bed6b1-4eab-585a-ab29-0604291a8c0e"
-version = "1.0.0"
+version = "0.0.0"
 
 [[Missings]]
 deps = ["Compat"]
@@ -326,6 +326,6 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[VersionParsing]]
 deps = ["Compat"]
-git-tree-sha1 = "e8524bb636735227fd9d750dfa81f98db8bc5b0c"
+git-tree-sha1 = "c9d5aa108588b978bd859554660c8a5c4f2f7669"
 uuid = "81def892-9a0e-5fdd-b105-ffc91e053289"
-version = "1.1.1"
+version = "1.1.2"
