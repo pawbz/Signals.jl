@@ -6,6 +6,8 @@ using SAC
 using Interpolation
 using Grid
 using ProgressMeter
+using FFTW
+using LinearAlgebra
 
 
 
@@ -44,7 +46,7 @@ function stackamp(T)
 	@showprogress 1 "Processing..." for ir in eachindex(T)
 		TT=T[ir]
 		if(TT.npts == npts)
-			amp=abs.(rfft(normalize(Float64.(TT.t))))
+			amp=abs.(FFTW.rfft(LinearAlgebra.normalize(Float64.(TT.t))))
 
 			for i in eachindex(amp)
 				ampstack[i]+=amp[i]
@@ -52,7 +54,7 @@ function stackamp(T)
 		end
 	end
 
-	normalize!(ampstack)
+	LinearAlgebra.normalize!(ampstack)
 	powwav = (ampstack.^2)
 	powwavdb = 10. * log10.(powwav./maximum(powwav)) # power in decibel after normalizing
 	return powwavdb, fgrid
