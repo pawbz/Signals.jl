@@ -262,7 +262,7 @@ function findfreq(
 	elseif(attrib == :peak)
 		iii=argmax(ax)
 	end
-	ii=ind2sub(size(ax),iii)[1]
+	ii=CartesianIndices(size(ax))[iii][1]
 	return fgrid.x[ii]
 
 end
