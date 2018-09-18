@@ -3,7 +3,6 @@ module Signals
 
 include("DSP.jl")
 include("Wavelets.jl")
-include("SAC.jl")
 
 
 """
