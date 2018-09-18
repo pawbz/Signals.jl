@@ -83,12 +83,6 @@ uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
 deps = ["Mmap"]
 uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
-[[Dierckx]]
-deps = ["BinaryProvider", "Libdl", "Random", "Test"]
-git-tree-sha1 = "7905f89a2beef5564c62fdf7aad1d0ef68b13239"
-uuid = "39dd38d3-220a-591b-8e3c-4c3a8c710a94"
-version = "0.4.0"
-
 [[DiffResults]]
 deps = ["Compat", "StaticArrays"]
 git-tree-sha1 = "db8acf46717b13d6c48deb7a12007c7f85a70cf7"
@@ -134,12 +128,6 @@ deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "InteractiveUtils", 
 git-tree-sha1 = "8425a7d4e060bc2ded32d090bce910a187d6cce7"
 uuid = "f6369f11-7733-5829-9624-2563aa707210"
 version = "0.9.0"
-
-[[Glob]]
-deps = ["Compat", "Pkg", "Test"]
-git-tree-sha1 = "c72f1fcb7d17426de1e8af2e948dfb3de1116eed"
-uuid = "c27321d9-0574-5035-807b-f59d2c89b15c"
-version = "1.2.0"
 
 [[Grid]]
 git-tree-sha1 = "3bf610eabc038400f8227883bea2589cc6908234"
@@ -269,14 +257,6 @@ deps = ["BinaryProvider", "Libdl", "Pkg", "Random", "Statistics", "Test"]
 git-tree-sha1 = "9a6c758cdf73036c3239b0afbea790def1dabff9"
 uuid = "79098fc4-a85e-5d69-aa6a-4863f24498fa"
 version = "0.5.0"
-
-[[SAC]]
-deps = ["AbstractFFTs", "Compat", "DSP", "Dierckx", "FFTW", "Glob", "Statistics"]
-git-tree-sha1 = "f0805896cd2f23131af60d6c25016420eee3a913"
-repo-rev = "master"
-repo-url = "git@github.com:anowacki/SAC.jl.git"
-uuid = "efca3a79-a021-5bb4-b6cf-8c9de39e1246"
-version = "0.0.0"
 
 [[SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
