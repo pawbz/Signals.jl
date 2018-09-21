@@ -129,13 +129,6 @@ git-tree-sha1 = "8425a7d4e060bc2ded32d090bce910a187d6cce7"
 uuid = "f6369f11-7733-5829-9624-2563aa707210"
 version = "0.9.0"
 
-[[Grid]]
-git-tree-sha1 = "3bf610eabc038400f8227883bea2589cc6908234"
-repo-rev = "master"
-repo-url = "https://github.com/pawbz/Grid.jl.git"
-uuid = "03512f2c-8e8a-5728-b518-32bdd82c6646"
-version = "0.0.0"
-
 [[InteractiveUtils]]
 deps = ["LinearAlgebra", "Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"

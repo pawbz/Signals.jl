@@ -1,6 +1,5 @@
 module DSP
 
-using Grid
 using Interpolation
 using Conv
 using Distributions
@@ -46,13 +45,13 @@ function freq_rand!(x;
 	)
 
 	nt=size(x,1)
-	(tgrid===nothing) && (tgrid=Grid.M1D(0.0, (nt-1)*1.0, 1.0))  # create dummy tgrid
-	fgrid=Grid.M1D_rfft(tgrid) # corresponding fgrid
+	(tgrid===nothing) && (tgrid=range(0.0, stop=(nt-1)*1.0, step=1.0))  # create dummy tgrid
+	fgrid=DSP.rfftfreq(length(tgrid),inv(step(tgrid))) # corresponding fgrid
 	(nt≠tgrid.nx) && error("dimension")
 
 	tmax=abs(tgrid.x[nt]-tgrid.x[1])
 
-	xfreq=complex.(zeros(fgrid.nx)) # allocation in freq domain
+	xfreq=complex.(zeros(length(fgrid))) # allocation in freq domain
 	xx=zeros(tgrid.nx) # allocation in time domain
 
 	fs=inv(tgrid.δx)
@@ -61,7 +60,7 @@ function freq_rand!(x;
 	(freqmax ≤ freqmin) && error("fmin and fmax")
 
 	Δf = inv(tmax) # resolution in the frequency domain
-	(Δf ≤ fgrid.δx) ? error("desired resolution smaller than grid sampling") :
+	(Δf ≤ step(fgrid)) ? error("desired resolution smaller than grid sampling") :
 	(Δf ≥ (freqmax-freqmin)) ? error("need to increase tmax") :
 	fvec = [f for f in freqmin:Δf:freqmax]
 	ifvec = fill(0, size(fvec))
@@ -71,20 +70,20 @@ function freq_rand!(x;
 	verbose && println("minimum frequency added to signal\t",minimum(fvec))
 	verbose && println("maximum frequency added to signal\t",maximum(fvec))
 	for iff in eachindex(fvec)
-		ifvec[iff] =  Interpolation.indminn(fgrid.x, fvec[iff])[1]
+		ifvec[iff] =  Interpolation.indminn(fgrid, fvec[iff])[1]
 	end
 
 	for iff in eachindex(fvec)
 		# translated sinc function
-		fshift=fgrid.x[ifvec[iff]]  # shift for translated sinc function
+		fshift=fgrid[ifvec[iff]]  # shift for translated sinc function
 		X=rand(rng) * exp(im*rand(Uniform(-pi, pi))) # uniformly distributed phase and random amplitude
 		Xe=complex(1.0) # intialization for events
 		for tfrac in nevent_fracs
 			Xe += exp(im*fshift*2*π*tfrac*tgrid.x[nt]) # phase translations for each event
 		end
 		X *= Xe # add events to X
-		for ifff in 1:fgrid.nx
-			α=tmax*(abs(fgrid.x[ifff] - fshift)) # argument of sinc function
+		for ifff in 1:length(fgrid)
+			α=tmax*(abs(fgrid[ifff] - fshift)) # argument of sinc function
 			xfreq[ifff] += (X * sinc(α)) # go
 		end
 	end
@@ -100,7 +99,7 @@ end
 Tapering is necessary to be able to input random signal into finite-difference code
 Filtering tapering are applied only if the length of the time series is greater than 10
 """
-function get_tapered_random_tmax_signal(tgrid::Grid.M1D; 
+function get_tapered_random_tmax_signal(tgrid; 
 					fmin=nothing,
 					fmax=nothing,
 					tmaxfrac::Float64=1.0,
@@ -238,13 +237,13 @@ end
 
 function findfreq(
 		  x::Array{Float64, ND},
-		  tgrid::Grid.M1D;
+		  tgrid;
 		  attrib::Symbol=:peak,
 		  threshold::Float64=-50.
 		  ) where {ND}
 
 	cx=rfft(x,[1]);
-	fgrid=Grid.M1D_rfft(tgrid);
+	fgrid=DSP.rfftfreq(length(tgrid),inv(step(tgrid))) # corresponding fgrid
 
 	ax = (abs.(cx).^2); # power spectrum in dB
 
@@ -263,7 +262,7 @@ function findfreq(
 		iii=argmax(ax)
 	end
 	ii=CartesianIndices(size(ax))[iii][1]
-	return fgrid.x[ii]
+	return fgrid[ii]
 
 end
 
