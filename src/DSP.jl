@@ -5,6 +5,8 @@ using Conv
 using Distributions
 using DistributedArrays
 using DSP # from julia
+using SparseArrays
+using LinearAlgebra
 using FFTW
 
 
@@ -14,14 +16,14 @@ function chirp!(x; tgrid=nothing,
 	fmax=nothing, # maximum fraction of Nyquist
 	)
 
-	fs=inv(tgrid.δx)
+	fs=inv(step(tgrid))
 	freqmin=(fmin===nothing) ? 0.0 : fmin*fs*0.5
 	freqmax=(fmax===nothing) ? fs*0.5 : fmax*fs*0.5
 
-	k=(freqmax-freqmin)*inv(tgrid.x[end]-tgrid.x[1])
+	k=(freqmax-freqmin)*inv(tgrid[end]-tgrid[1])
 
-	for it in 1:tgrid.nx
-		t=(it-1)*tgrid.δx
+	for it in 1:length(tgrid)
+		t=(it-1)*step(tgrid)
 		x[it] = sin(2. * π *(freqmin*t+k/2.0*t*t))
 	end
 
@@ -47,14 +49,14 @@ function freq_rand!(x;
 	nt=size(x,1)
 	(tgrid===nothing) && (tgrid=range(0.0, stop=(nt-1)*1.0, step=1.0))  # create dummy tgrid
 	fgrid=DSP.rfftfreq(length(tgrid),inv(step(tgrid))) # corresponding fgrid
-	(nt≠tgrid.nx) && error("dimension")
+	(nt≠length(tgrid)) && error("dimension")
 
-	tmax=abs(tgrid.x[nt]-tgrid.x[1])
+	tmax=abs(tgrid[nt]-tgrid[1])
 
 	xfreq=complex.(zeros(length(fgrid))) # allocation in freq domain
-	xx=zeros(tgrid.nx) # allocation in time domain
+	xx=zeros(length(tgrid)) # allocation in time domain
 
-	fs=inv(tgrid.δx)
+	fs=inv(step(tgrid))
 	freqmin=(fmin===nothing) ? 0.0 : fmin*fs*0.5
 	freqmax=(fmax===nothing) ? fs*0.5 : fmax*fs*0.5
 	(freqmax ≤ freqmin) && error("fmin and fmax")
@@ -79,7 +81,7 @@ function freq_rand!(x;
 		X=rand(rng) * exp(im*rand(Uniform(-pi, pi))) # uniformly distributed phase and random amplitude
 		Xe=complex(1.0) # intialization for events
 		for tfrac in nevent_fracs
-			Xe += exp(im*fshift*2*π*tfrac*tgrid.x[nt]) # phase translations for each event
+			Xe += exp(im*fshift*2*π*tfrac*tgrid[nt]) # phase translations for each event
 		end
 		X *= Xe # add events to X
 		for ifff in 1:length(fgrid)
@@ -89,7 +91,7 @@ function freq_rand!(x;
 	end
 	xx=irfft(xfreq, nt)
 	normalize!(xx)
-	copy!(x, xx)
+	copyto!(x, xx)
 	return x
 
 end
@@ -107,24 +109,24 @@ function get_tapered_random_tmax_signal(tgrid;
 					sparsep=1.0,
 					taperperc=20.
 					)
-	filt_flag=(tgrid.nx > 5) && (!(fmin === nothing)) && (!(fmax===nothing))
+	filt_flag=(length(tgrid) > 5) && (!(fmin === nothing)) && (!(fmax===nothing))
 
-	fs = 1/ tgrid.δx;
+	fs = inv(step(tgrid));
 	if(filt_flag)
 		designmethod = Butterworth(6);
 		filtsource = Bandpass(fmin, fmax; fs=fs);
 	end
 
-	itind = indmin(abs.(tgrid.x-abs(tmaxfrac)*tgrid.x[end]))
+	itind = argmin(abs.(tgrid.-abs(tmaxfrac)*tgrid[end]))
 	if(tmaxfrac>0.0)
 		its=1:itind
 	elseif(tmaxfrac<0.0)
-		its=itind:tgrid.nx
+		its=itind:length(tgrid)
 	end
 	# 20% taper window
 	twin = taper(ones(length(its)),taperperc) 
 	X = zeros(length(its))
-	wavsrc = zeros(tgrid.nx) 
+	wavsrc = zeros(length(tgrid)) 
 	if(filt_flag) 
 		X[:] = rand(dist, length(its)) .* twin
 	else
@@ -132,10 +134,10 @@ function get_tapered_random_tmax_signal(tgrid;
 	end
 	if(sparsep ≠ 1.0)
 		Xs=sprandn(length(X), sparsep)
-		X[findn(Xs.==0.0)]=0.0
+		X[findall(Xs.==0.0)].=0.0
 	end
 	# band limit
-	(filt_flag) && (Base.filt!(X, digitalfilter(filtsource, designmethod), X))
+	(filt_flag) && (filt!(X, digitalfilter(filtsource, designmethod), X))
 	
 	(length(X) ≠ 1) && normalize!(X)
 	wavsrc[its] = X

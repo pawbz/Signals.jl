@@ -1,6 +1,7 @@
 module Signals
 
 
+using Statistics
 include("DSP.jl")
 
 
